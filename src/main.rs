@@ -19,19 +19,20 @@ fn view(_app: &App, _model: &Model, frame: Frame) {
     // get canvas to draw on
     let draw = _app.draw();
 
-    let bgColor: Rgb = Rgb::new(0.3, 0.05, 0.6);
+    let bgColor: Rgb = Rgb::new(0.15, 0.05, 0.4);
     draw.background().color(bgColor);
 
-    let ellipseColor: Rgb = Rgb::new(0.01, 0.4, 0.6);
-    draw.ellipse()
-        .x_y(150.0, -80.0)
-        .w_h(150.0, 280.0)
-        .color(ellipseColor);
+    let iterationCount: i32 = 500;
 
-    let points = (0..50).map(|i| {
-        let x = i as f32 - 25.0; //subtract 25 to center the sine wave
-        let point = pt2(x, x.sin()) * 20.0; //scale sine wave by 20.0
-        (point, STEELBLUE)
+    let points = (0..iterationCount).map(|i| {
+        let x = (i - iterationCount / 2) as f32 / 10.0; //subtract 25 to center the sine wave
+        let y: f32 = x.sin();
+        let point = pt2(x, y) * 20.0; //scale sine wave by 20.0
+
+        let sineValue = (y + 1.0) * 0.5;
+
+        let sineColor: Rgb = Rgb::new(0.01, 0.2, 0.6 * sineValue);
+        (point, sineColor)
     });
     draw.polyline().weight(3.0).points_colored(points);
 
