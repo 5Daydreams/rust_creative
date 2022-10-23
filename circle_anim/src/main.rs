@@ -32,7 +32,7 @@ fn view(_app: &App, _model: &Model, frame: Frame) {
     let y: f32 = map_range(slower_sine, -1.0, 1.0, boundary.bottom(), boundary.top());
 
     // Draw a blue ellipse with a radius of 10 at the (x,y) coordinates of (0.0, 0.0)
-    draw.ellipse().color(STEELBLUE).x_y(x,y);
+    draw.ellipse().color(STEELBLUE).x_y(x, y);
 
     draw.to_frame(_app, &frame).unwrap();
 }
