@@ -1,0 +1,28 @@
+unstable_features = true
+
+# Misc
+match_arm_leading_pipes = "Always"
+binop_separator = "Front"
+imports_layout = "Vertical"
+blank_lines_upper_bound = 1
+chain_width = 20
+hard_tabs = true
+remove_nested_parens = true
+space_after_colon = true
+spaces_around_ranges = true
+
+# Comments
+normalize_doc_attributes = true
+normalize_comments = true
+format_code_in_doc_comments = true
+wrap_comments = true
+comment_width = 100
+
+# Brackets & Functions
+fn_args_layout = "Tall"
+control_brace_style = "AlwaysNextLine"
+brace_style = "AlwaysNextLine"
+indent_style = "Block"
+empty_item_single_line = true
+fn_single_line = true
+force_multiline_blocks = true
