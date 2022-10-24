@@ -1,6 +1,7 @@
 mod helper_structs;
 
 use helper_structs::*;
+use nannou::draw::background::new;
 use nannou::noise::{
 	NoiseFn,
 	Perlin,
@@ -32,71 +33,50 @@ fn view(_app: &App, _model: &Model, frame: Frame)
 	draw.background()
 		.color(_model.bg_color);
 
-	const SPEED: f64 = 2.0;
-	let t: f64 = (_app.time as f64) * SPEED;
+	const SPEED: f32 = 2.0;
+	let t: f32 = _app.time * SPEED;
 
-	let horizontal: f32 = 300.;
-	let vertical: f32 = 150.;
+	let width: f32 = 350.;
+	let height: f32 = 150.;
 
-	let range: std::ops::RangeInclusive<i32> = -horizontal as i32 ..= horizontal as i32;
+	let sampling_scale: f32 = 5.0;
 
-	let step_size: usize = 30;
-	let perlin: Perlin = Perlin::new();
-	let noise_scale: f64 = 5.0;
-	let amplitude_scale = 0.7;
-	let amplitude_offset = 1.0;
+	let step_size: usize = 5;
+	let element_count: usize = ((width * 2.0) as usize) / step_size;
 
-	let mut _last_end_pos: Option<Vec2>;
+	let mut points: Vec<Vec2> = Vec::new();
 
-	for value in range.step_by(step_size)
+	let start_pos: f32 = -width;
+
+	let sample_value = (start_pos * sampling_scale).cos();
+	let point_pos: Vec2 = Vec2::new(start_pos, height * sample_value);
+
+	points.push(point_pos);
+
+	for i in 1 .. element_count
 	{
-		let perlin_sample_pos: f64 = (value as f64 / (horizontal as f64)) * noise_scale;
+		// match i % 2 {
+        //     1 => // do top line
+        //     _ => // do bottom line
+        // }
 
-		let point_pos: [f64; 2] = [t + perlin_sample_pos * 1.1, perlin_sample_pos * 0.2];
-		let perlin_value_start: f32 = perlin.get(point_pos) as f32;
-		let start_x_offset: f32 = perlin_value_start * (step_size as f32);
-		let start_pos: Vec2 = Vec2::new(
-			(value as f32) + start_x_offset,
-			vertical * (perlin_value_start * amplitude_scale - amplitude_offset),
-		);
+		let sampling_pos: f32 = 2.0 * width * (i as f32 / element_count as f32) + start_pos;
 
-		let point_pos: [f64; 2] = [t + perlin_sample_pos * 0.2, perlin_sample_pos * 1.1];
-		let perlin_value_end: f32 = perlin.get(point_pos) as f32;
-		let end_x_offset: f32 = perlin_value_end * (step_size as f32);
-		let end_pos: Vec2 = Vec2::new(
-			(value as f32) - end_x_offset,
-			vertical * (perlin_value_end * amplitude_scale + amplitude_offset),
-		);
+		let sample_value: f32 = (sampling_pos * sampling_scale).cos();
+		let perlin_value: f32 = height * sample_value;
 
-		let perlin_value_delta: f32 =
-			((end_pos.y) - (start_pos.y)) / (2.5 * (amplitude_scale + amplitude_offset) * vertical);
+		let offset = (1.0 - 2.0 * (i % 2) as f32) * height * 0.5;
+
+		let curr_vec = Vec2::new(sampling_pos, perlin_value - offset);
+
+		points.push(curr_vec);
 
 		draw.line()
-			.start(start_pos)
-			.end(end_pos)
+			.start(points[i - 1])
+			.end(points[i])
 			.caps_round()
 			.stroke_weight(3.0)
-			.color(Srgb::<f32>::new(
-				perlin_value_delta,
-				perlin_value_delta,
-				perlin_value_delta,
-			));
-
-		// if last_end_pos.is_some()
-		// {
-		// 	draw.line()
-		// 		.start(start_pos)
-		// 		.end(last_end_pos.unwrap())
-		// 		.caps_round()
-		// 		.stroke_weight(3.0)
-		// 		.color(Srgb::<f32>::new(
-		// 			perlin_value_delta,
-		// 			perlin_value_delta,
-		// 			perlin_value_delta,
-		// 		));
-		// }
-
-		// last_end_pos = Some(end_pos);
+			.color(Srgb::<f32>::new(0.9, 0.9, 0.9));
 	}
 
 	draw.to_frame(_app, &frame)
