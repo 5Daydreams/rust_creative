@@ -4,11 +4,10 @@ use helper_structs::*;
 // use nannou::noise::{NoiseFn, Perlin};
 use nannou::prelude::*;
 
-fn main() {
-	nannou::app(model).run();
-}
+fn main() { nannou::app(model).run(); }
 
-fn model(_app: &App) -> Model {
+fn model(_app: &App) -> Model
+{
 	let color_value: Srgb<f32> = Srgb::<f32>::new(0.05, 0.1, 0.1);
 	let w_size = Vec2Int::new(800, 600);
 
@@ -20,10 +19,11 @@ fn model(_app: &App) -> Model {
 		.build()
 		.unwrap();
 
-	return model;
+	model
 }
 
-fn view(_app: &App, _model: &Model, frame: Frame) {
+fn view(_app: &App, _model: &Model, frame: Frame)
+{
 	let draw: Draw = _app.draw();
 
 	draw.background()
@@ -58,12 +58,14 @@ fn view(_app: &App, _model: &Model, frame: Frame) {
 
 	points.push(point_pos);
 
-	for i in 1..element_count {
+	for i in 1 .. element_count
+	{
 		let x_value: f32 = 2.0 * width * (i as f32 / element_count as f32) + start_x_value;
 
 		let sample_value: f32 = ((x_value + t) * sampling_scale) / width;
 
-		let sample_result: f32 = match i % 2 {
+		let sample_result: f32 = match i % 2
+		{
 			| 0 => helper_structs::skewed_cos(sample_value, skewness), // do top line
 			| _ => helper_structs::skewed_cos(sample_value + sample_offset, skewness), // do bottom line
 		};
