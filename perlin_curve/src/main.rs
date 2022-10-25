@@ -40,6 +40,7 @@ fn view(_app: &App, _model: &Model, frame: Frame) {
 	const SKEWNESS: f32 = 0.25;
 	const BASE_LERP_VALUE: f32 = 0.4;
 	const MIDPOINT_LERP_VALUE: f32 = 0.4;
+	const MIDPOINT_OFFSET: f32 = SAMPLE_OFFSET * 0.5 - PI * 0.5;
 
 	const STEP_SIZE: usize = 7;
 	const ELEMENT_COUNT: usize = ((WIDTH * 2.0) as usize) / STEP_SIZE;
@@ -53,7 +54,7 @@ fn view(_app: &App, _model: &Model, frame: Frame) {
 	let y_value: f32 = HEIGHT * sample_result;
 
 	let normalized_sample_result =
-		helper_structs::skewed_cos(sample_value + SAMPLE_OFFSET * 0.5 - PI * 0.5, SKEWNESS) * 0.5
+		helper_structs::skewed_cos(sample_value + MIDPOINT_OFFSET, SKEWNESS) * 0.5
 			+ 0.5;
 
 	let curr_vec: Vec2 = Vec2::new(
@@ -76,7 +77,7 @@ fn view(_app: &App, _model: &Model, frame: Frame) {
 		let y_value: f32 = HEIGHT * sample_result;
 
 		let normalized_sample_result =
-			helper_structs::skewed_cos(sample_value + SAMPLE_OFFSET * 0.5 - PI * 0.5, SKEWNESS)
+			helper_structs::skewed_cos(sample_value + MIDPOINT_OFFSET, SKEWNESS)
 				* 0.5 + 0.5;
 
 		let curr_vec = Vec2::new(x_value, y_value * (BASE_LERP_VALUE + MIDPOINT_LERP_VALUE * normalized_sample_result));
@@ -87,7 +88,7 @@ fn view(_app: &App, _model: &Model, frame: Frame) {
 			.start(points[i - 1])
 			.end(points[i])
 			.caps_round()
-			.stroke_weight(2.0 + 1.5 * normalized_sample_result)
+			.stroke_weight(1.5 + 2.0 * normalized_sample_result)
 			.color(Srgb::<f32>::new(
 				normalized_sample_result,
 				normalized_sample_result,
