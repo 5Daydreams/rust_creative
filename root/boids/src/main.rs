@@ -51,9 +51,9 @@ impl Nannou for Model
 fn model(_app: &App) -> Model
 {
 	let mut model = Model {
-		boid_count: 150,
+		boid_count: 2500,
 		boid_list: Vec::new(),
-		window_size: [800, 600],
+		window_size: [1200, 800],
 	};
 
 	_app.new_window()
@@ -66,43 +66,40 @@ fn model(_app: &App) -> Model
 	{
 		let mut rand_vec: Vec2 = Vec2::new(0., 0.);
 
-		let x_range_pos = -350.0 .. 3500.;
-		let y_range_pos = -200.0 .. 200.;
+		let x_range_pos = -(model.window_size[0] as f32) .. (model.window_size[0] as f32);
+		let y_range_pos = -(model.window_size[1] as f32) .. (model.window_size[1] as f32);
 
 		rand_vec.randomize(x_range_pos, y_range_pos);
 		let position: Vec2 = rand_vec;
 
-		let x_range_vel = -2.0 .. 2.;
-		let y_range_vel = -2.0 .. 2.;
+		let x_range_vel = -5.0 .. 7.;
+		let y_range_vel = -5.0 .. 6.;
 
 		rand_vec.randomize(x_range_vel, y_range_vel);
 		let velocity: Vec2 = rand_vec;
 
-		let x_range_acc = -0.01 .. 0.01;
-		let y_range_acc = -0.01 .. 0.01;
+		let body_radius: f32 = rand::thread_rng().gen_range(2.5 .. 3.0);
+		let perception_radius: f32 = 150.;
+		let max_speed: f32 = 6.5;
+		let steering_factor: f32 = 0.012;
+		let cohesion_factor: f32 = 0.04;
+		let separation_factor: f32 = 0.05;
 
-		rand_vec.randomize(x_range_acc, y_range_acc);
-		let acceleration: Vec2 = rand_vec;
-
-		let body_radius: f32 = rand::thread_rng().gen_range(3. .. 4.);
-		let perception_radius: f32 = 50.;
-		let max_speed: f32 = 1.;
-		let max_steering: f32 = 0.00000000001;
-
-		let r: f32 = rand::thread_rng().gen_range(0.1 .. 0.4);
-		let g: f32 = rand::thread_rng().gen_range(0.15 .. 0.2);
-		let b: f32 = rand::thread_rng().gen_range(0.65 .. 0.7);
+		let r: f32 = rand::thread_rng().gen_range(0.08 .. 0.15);
+		let g: f32 = rand::thread_rng().gen_range(0.02 .. 0.08);
+		let b: f32 = rand::thread_rng().gen_range(0.45 .. 0.85);
 
 		let color = Srgb::<f32>::new(r, g, b);
 
 		let boid: Boid = Boid::new()
 			.position(position)
 			.velocity(velocity)
-			.acceleration(acceleration)
 			.body_radius(body_radius)
 			.perception_radius(perception_radius)
 			.max_speed(max_speed)
-			.max_steering(max_steering)
+			.steering_factor(steering_factor)
+			.cohesion_factor(cohesion_factor)
+			.separation_factor(separation_factor)
 			.color(color)
 			.window_size(model.window_size)
 			.build();
@@ -125,16 +122,6 @@ fn view(_app: &App, model: &Model, frame: Frame)
 		.color(Srgb::<f32>::new(0.05, 0.1, 0.15));
 
 	model.display(&draw);
-
-	let line_start = Vec2::new(-200.0, 100.0);
-	let line_end = Vec2::new(200.0, -100.0);
-
-	draw.line()
-		.start(line_start)
-		.end(line_end)
-		.caps_round()
-		.stroke_weight(1.5)
-		.color(Srgb::<f32>::new(0.7, 0.7, 0.7));
 
 	draw.to_frame(_app, &frame)
 		.unwrap();

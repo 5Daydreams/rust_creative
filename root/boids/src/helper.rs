@@ -9,7 +9,9 @@ pub struct Boid
 	body_radius: f32,
 	perception_radius: f32,
 	max_speed: f32,
-	max_steering: f32,
+	steering_factor: f32,
+	cohesion_factor: f32,
+	separation_factor: f32,
 	color: Srgb<f32>,
 	window_size: [u32; 2],
 }
@@ -32,7 +34,9 @@ impl Boid
 			body_radius: None,
 			perception_radius: None,
 			max_speed: None,
-			max_steering: None,
+			steering_factor: None,
+			cohesion_factor: None,
+			separation_factor: None,
 			color: None,
 			window_size: None,
 		}
@@ -40,8 +44,9 @@ impl Boid
 
 	fn steer(&mut self, other_boids: &Vec<Boid>) -> Vec2
 	{
-		let mut target_velocity: Vec2 = Vec2::new(0., 0.);
-		let mut target_pos_midpoint: Vec2 = Vec2::new(0., 0.);
+		let mut alignment_steering: Vec2 = Vec2::new(0., 0.);
+		let mut cohesion_steering: Vec2 = Vec2::new(0., 0.);
+		let mut separation_steering: Vec2 = Vec2::new(0., 0.);
 		let mut neighbour_count: i32 = 0;
 
 		for other in other_boids
@@ -49,33 +54,40 @@ impl Boid
 			let dist = Vec2::distance(self.position, other.position);
 			if dist < self.perception_radius && other != self
 			{
-				target_pos_midpoint += other.position;
-				target_velocity += other.velocity;
+				let separation_calc = self.position - other.position;
+				separation_steering += separation_calc / (dist * dist);
+				cohesion_steering += other.position;
+				alignment_steering += other.velocity;
 				neighbour_count += 1;
 			}
 		}
 
 		if neighbour_count > 0
 		{
-			target_pos_midpoint /= neighbour_count as f32;
-			target_pos_midpoint -= self.position;
-			target_pos_midpoint = target_pos_midpoint.normalize() * self.max_speed;
-			target_pos_midpoint -= self.velocity;
-			target_pos_midpoint.clamp_length_max(self.max_steering);
+			separation_steering /= neighbour_count as f32;
+			separation_steering = separation_steering.normalize() * self.max_speed;
+			separation_steering -= self.velocity;
+			separation_steering = separation_steering.clamp_length_max(self.separation_factor);
 
-			target_velocity /= neighbour_count as f32;
-			target_velocity = target_velocity.normalize() * self.max_speed;
-			target_velocity -= self.velocity;
-			target_velocity.clamp_length_max(self.max_steering);
+			cohesion_steering /= neighbour_count as f32;
+			cohesion_steering -= self.position;
+			cohesion_steering = cohesion_steering.normalize() * self.max_speed;
+			cohesion_steering -= self.velocity;
+			cohesion_steering = cohesion_steering.clamp_length_max(self.cohesion_factor);
+
+			alignment_steering /= neighbour_count as f32;
+			alignment_steering = alignment_steering.normalize() * self.max_speed;
+			alignment_steering -= self.velocity;
+			alignment_steering = alignment_steering.clamp_length_max(self.steering_factor);
 		}
 
-		target_pos_midpoint // + target_velocity
+		separation_steering + cohesion_steering + alignment_steering
 	}
 
 	pub fn flock(&mut self, other_boids: &Vec<Boid>)
 	{
 		let steer_value = self.steer(other_boids);
-		self.acceleration = steer_value;
+		self.acceleration += steer_value;
 	}
 }
 
@@ -103,6 +115,12 @@ impl Nannou for Boid
 
 		self.position += self.velocity;
 		self.velocity += self.acceleration;
+
+		self.velocity = self
+			.velocity
+			.clamp_length_max(self.max_speed);
+
+		self.acceleration *= 0.;
 	}
 
 	fn display(&self, draw: &nannou::Draw)
@@ -125,7 +143,9 @@ impl Default for Boid
 			body_radius: 5.,
 			perception_radius: 20_f32,
 			max_speed: 20.,
-			max_steering: 2.,
+			steering_factor: 0.01,
+			cohesion_factor: 0.01,
+			separation_factor: 0.01,
 			color: Srgb::<f32>::new(0.7, 0.2, 0.6),
 			window_size: [800, 600],
 		}
@@ -140,7 +160,9 @@ pub struct BoidBuilder
 	body_radius: Option<f32>,
 	perception_radius: Option<f32>,
 	max_speed: Option<f32>,
-	max_steering: Option<f32>,
+	steering_factor: Option<f32>,
+	cohesion_factor: Option<f32>,
+	separation_factor: Option<f32>,
 	color: Option<Srgb<f32>>,
 	window_size: Option<[u32; 2]>,
 }
@@ -183,9 +205,21 @@ impl BoidBuilder
 		self
 	}
 
-	pub fn max_steering(&mut self, max_steering: f32) -> &mut Self
+	pub fn steering_factor(&mut self, steering_factor: f32) -> &mut Self
 	{
-		self.max_steering = Some(max_steering);
+		self.steering_factor = Some(steering_factor);
+		self
+	}
+
+	pub fn cohesion_factor(&mut self, cohesion_factor: f32) -> &mut Self
+	{
+		self.cohesion_factor = Some(cohesion_factor);
+		self
+	}
+
+	pub fn separation_factor(&mut self, separation_factor: f32) -> &mut Self
+	{
+		self.separation_factor = Some(separation_factor);
 		self
 	}
 
@@ -222,8 +256,14 @@ impl BoidBuilder
 			max_speed: self
 				.max_speed
 				.unwrap_or_default(),
-			max_steering: self
-				.max_steering
+			steering_factor: self
+				.steering_factor
+				.unwrap_or_default(),
+			cohesion_factor: self
+				.cohesion_factor
+				.unwrap_or_default(),
+			separation_factor: self
+				.separation_factor
 				.unwrap_or_default(),
 			color: self
 				.color
