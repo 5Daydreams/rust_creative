@@ -19,7 +19,9 @@ fn main()
 
 struct Model
 {
+	boid_count: u32,
 	boid_list: Vec<Boid>,
+	window_size: [u32; 2],
 }
 
 impl Nannou for Model
@@ -34,9 +36,13 @@ impl Nannou for Model
 
 	fn update(&mut self)
 	{
+		let old_list = self
+			.boid_list
+			.clone();
+
 		for boid in &mut self.boid_list
 		{
-			boid.flock(&self.boid_list);
+			boid.flock(&old_list);
 			boid.update();
 		}
 	}
@@ -44,30 +50,30 @@ impl Nannou for Model
 
 fn model(_app: &App) -> Model
 {
-	let window_size: [u32; 2] = [800, 600];
+	let mut model = Model {
+		boid_count: 150,
+		boid_list: Vec::new(),
+		window_size: [800, 600],
+	};
 
 	_app.new_window()
-		.size(window_size[0], window_size[1])
+		.size(model.window_size[0], model.window_size[1])
 		.view(view)
 		.build()
 		.unwrap();
 
-	let mut model = Model {
-		boid_list: Vec::new(),
-	};
-
-	for _ in 0 .. 50
+	for _ in 0 .. model.boid_count
 	{
 		let mut rand_vec: Vec2 = Vec2::new(0., 0.);
 
-		let x_range_pos = -100.0 .. 100.;
-		let y_range_pos = -100.0 .. 100.;
+		let x_range_pos = -350.0 .. 3500.;
+		let y_range_pos = -200.0 .. 200.;
 
 		rand_vec.randomize(x_range_pos, y_range_pos);
 		let position: Vec2 = rand_vec;
 
-		let x_range_vel = -1.0 .. 1.;
-		let y_range_vel = -1.0 .. 1.;
+		let x_range_vel = -2.0 .. 2.;
+		let y_range_vel = -2.0 .. 2.;
 
 		rand_vec.randomize(x_range_vel, y_range_vel);
 		let velocity: Vec2 = rand_vec;
@@ -78,7 +84,10 @@ fn model(_app: &App) -> Model
 		rand_vec.randomize(x_range_acc, y_range_acc);
 		let acceleration: Vec2 = rand_vec;
 
-		let radius: f32 = rand::thread_rng().gen_range(3. .. 4.);
+		let body_radius: f32 = rand::thread_rng().gen_range(3. .. 4.);
+		let perception_radius: f32 = 50.;
+		let max_speed: f32 = 1.;
+		let max_steering: f32 = 0.00000000001;
 
 		let r: f32 = rand::thread_rng().gen_range(0.1 .. 0.4);
 		let g: f32 = rand::thread_rng().gen_range(0.15 .. 0.2);
@@ -90,8 +99,12 @@ fn model(_app: &App) -> Model
 			.position(position)
 			.velocity(velocity)
 			.acceleration(acceleration)
-			.radius(radius)
+			.body_radius(body_radius)
+			.perception_radius(perception_radius)
+			.max_speed(max_speed)
+			.max_steering(max_steering)
 			.color(color)
+			.window_size(model.window_size)
 			.build();
 
 		model

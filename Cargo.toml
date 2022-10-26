@@ -1,4 +1,4 @@
 [workspace]
-members = ["root/boids"]
+members = ["root/*"]
 exclude = ["target"]
 resolver = "2"
