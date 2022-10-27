@@ -72,18 +72,18 @@ fn model(_app: &App) -> Model
 		rand_vec.randomize(x_range_pos, y_range_pos);
 		let position: Vec2 = rand_vec;
 
-		let x_range_vel = -5.0 .. 7.;
-		let y_range_vel = -5.0 .. 6.;
+		let x_range_vel = -100.0 .. 110.;
+		let y_range_vel = -100.0 .. 110.;
 
 		rand_vec.randomize(x_range_vel, y_range_vel);
 		let velocity: Vec2 = rand_vec;
 
 		let body_radius: f32 = rand::thread_rng().gen_range(2.5 .. 3.0);
-		let perception_radius: f32 = 150.;
-		let max_speed: f32 = 6.5;
-		let steering_factor: f32 = 0.012;
-		let cohesion_factor: f32 = 0.04;
-		let separation_factor: f32 = 0.05;
+		let perception_radius: f32 = 15.;
+		let max_speed: f32 = 13.5;
+		let steering_factor: f32 = 0.1;
+		let cohesion_factor: f32 = 0.65;
+		let separation_factor: f32 = 0.35;
 
 		let r: f32 = rand::thread_rng().gen_range(0.08 .. 0.15);
 		let g: f32 = rand::thread_rng().gen_range(0.02 .. 0.08);
