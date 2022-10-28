@@ -54,8 +54,8 @@ impl Nannou for LorentzPoint
 	fn display(&self, draw: &nannou::Draw)
 	{
 		let x_offset: f32 = 0.;
-		let y_offset: f32 = 5.;
-		let z_offset: f32 = 150.;
+		let y_offset: f32 = 0.;
+		let z_offset: f32 = 40.;
 
 		let mut temp: Vec2;
 		let offset: Vec3 = Vec3::new(x_offset, y_offset, z_offset);
