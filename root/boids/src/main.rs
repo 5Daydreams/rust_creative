@@ -2,13 +2,13 @@ use nannou::prelude::*;
 
 mod helper;
 mod vec_extensions;
+use vec_extensions::Randomize;
 
 use helper::*;
 use rand::{
 	self,
 	Rng,
 };
-use vec_extensions::Randomize;
 
 fn main()
 {
@@ -51,7 +51,7 @@ impl Nannou for Model
 fn model(_app: &App) -> Model
 {
 	let mut model = Model {
-		boid_count: 2500,
+		boid_count: 4500,
 		boid_list: Vec::new(),
 		window_size: [1200, 800],
 	};
@@ -81,9 +81,9 @@ fn model(_app: &App) -> Model
 		let body_radius: f32 = rand::thread_rng().gen_range(2.5 .. 3.0);
 		let perception_radius: f32 = 15.;
 		let max_speed: f32 = 13.5;
-		let steering_factor: f32 = 0.1;
-		let cohesion_factor: f32 = 0.65;
-		let separation_factor: f32 = 0.35;
+		let steering_factor: f32 = 0.02;
+		let cohesion_factor: f32 = 0.15;
+		let separation_factor: f32 = 0.045;
 
 		let r: f32 = rand::thread_rng().gen_range(0.08 .. 0.15);
 		let g: f32 = rand::thread_rng().gen_range(0.02 .. 0.08);

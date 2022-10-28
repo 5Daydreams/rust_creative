@@ -65,18 +65,18 @@ impl Boid
 		if neighbour_count > 0
 		{
 			separation_steering /= neighbour_count as f32;
-			separation_steering = separation_steering.normalize() * self.max_speed;
+			separation_steering *= self.max_speed;
 			separation_steering -= self.velocity;
 			separation_steering = separation_steering.clamp_length_max(self.separation_factor);
 
 			cohesion_steering /= neighbour_count as f32;
 			cohesion_steering -= self.position;
-			cohesion_steering = cohesion_steering.normalize() * self.max_speed;
+			cohesion_steering *= self.max_speed;
 			cohesion_steering -= self.velocity;
 			cohesion_steering = cohesion_steering.clamp_length_max(self.cohesion_factor);
 
 			alignment_steering /= neighbour_count as f32;
-			alignment_steering = alignment_steering.normalize() * self.max_speed;
+			alignment_steering *= self.max_speed;
 			alignment_steering -= self.velocity;
 			alignment_steering = alignment_steering.clamp_length_max(self.steering_factor);
 		}
