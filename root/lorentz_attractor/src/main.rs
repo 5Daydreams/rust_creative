@@ -58,16 +58,17 @@ fn model(_app: &App) -> Model
 
 	let z_near: f32 = 1.0;
 	let z_far: f32 = 10000.0;
-	let constants_vec: Vec3 = Vec3::new(10., 8./3., 15.);
+	let field_of_view: f32 = PI * 0.75;
+	let constants_vec: Vec3 = Vec3::new(10., 8./3., 23.);
 	let curve_count: u32 = 50;
 
 	let mut rand_vec: Vec3 = Vec3::new(0., 0., 0.);
 
 	for _ in 0 .. curve_count
 	{
-		let x_range_pos: Range<f32> = -1.0 .. 1.0;
-		let y_range_pos: Range<f32> = -1.0 .. 1.0;
-		let z_range_pos: Range<f32> = -1.0 .. 1.0;
+		let x_range_pos: Range<f32> = -2.0 .. 2.0;
+		let y_range_pos: Range<f32> = -2.0 .. 2.0;
+		let z_range_pos: Range<f32> = -2.0 .. 2.0;
 
 		rand_vec.randomize(x_range_pos, y_range_pos, z_range_pos);
 
@@ -86,6 +87,7 @@ fn model(_app: &App) -> Model
 			.push(LorentzPoint {
 				near_plane: z_near,
 				far_plane: z_far,
+				fov_radians: field_of_view,
 				window_size: model.window_size,
 				delta_time: model.time.delta_time,
 				lorentz_constants: constants_vec,

@@ -19,6 +19,7 @@ pub struct LorentzPoint
 {
 	pub near_plane: f32,
 	pub far_plane: f32,
+	pub fov_radians: f32,
 	pub window_size: [u32; 2],
 	pub delta_time: f32,
 	pub lorentz_constants: Vec3,
@@ -55,14 +56,14 @@ impl Nannou for LorentzPoint
 	{
 		let x_offset: f32 = 0.;
 		let y_offset: f32 = 0.;
-		let z_offset: f32 = 40.;
+		let z_offset: f32 = 10.;
 
 		let mut temp: Vec2;
 		let offset: Vec3 = Vec3::new(x_offset, y_offset, z_offset);
 
 		temp = (self.prev_point + offset).project_into_2d(
 			self.window_size,
-			PI / 3.,
+			self.fov_radians,
 			self.near_plane,
 			self.far_plane,
 		);
@@ -70,13 +71,11 @@ impl Nannou for LorentzPoint
 
 		temp = (self.curr_point + offset).project_into_2d(
 			self.window_size,
-			PI / 3.,
+			self.fov_radians,
 			self.near_plane,
 			self.far_plane,
 		);
 		let draw_vec_curr: Vec2 = temp;
-
-		println!("{}", draw_vec_curr);
 
 		draw.line()
 			.start(draw_vec_prev)
