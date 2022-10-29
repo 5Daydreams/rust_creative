@@ -22,6 +22,7 @@ pub struct LorentzPoint
 	pub fov_radians: f32,
 	pub window_size: [u32; 2],
 	pub delta_time: f32,
+	pub curr_time: f32,
 	pub lorentz_constants: Vec3,
 	pub prev_point: Vec3,
 	pub curr_point: Vec3,
@@ -30,7 +31,11 @@ pub struct LorentzPoint
 
 impl LorentzPoint
 {
-	pub fn refresh_time(&mut self, delta_time: f32) { self.delta_time = delta_time; }
+	pub fn refresh_time(&mut self, delta_time: f32)
+	{
+		self.delta_time = delta_time;
+		self.curr_time += 1. * self.delta_time;
+	}
 }
 
 impl Nannou for LorentzPoint
@@ -56,25 +61,27 @@ impl Nannou for LorentzPoint
 	{
 		let x_offset: f32 = 0.;
 		let y_offset: f32 = 0.;
-		let z_offset: f32 = 10.;
-
-		let mut temp: Vec2;
+		let z_offset: f32 = 80.;
 		let offset: Vec3 = Vec3::new(x_offset, y_offset, z_offset);
 
 		let project_from_3d = |vec: Vec3| -> Vec2 {
-			(vec + offset).project_into_2d(
+			(vec).project_into_2d(
+				offset,
 				self.window_size,
 				self.fov_radians,
 				self.near_plane,
 				self.far_plane,
+				self.curr_time,
 			)
 		};
 
-		temp = project_from_3d(self.prev_point);
-		let draw_vec_prev: Vec2 = temp;
+		let mut temp_2: Vec2;
 
-		temp = project_from_3d(self.curr_point);
-		let draw_vec_curr: Vec2 = temp;
+		temp_2 = project_from_3d(self.prev_point);
+		let draw_vec_prev: Vec2 = temp_2;
+
+		temp_2 = project_from_3d(self.curr_point);
+		let draw_vec_curr: Vec2 = temp_2;
 
 		draw.line()
 			.start(draw_vec_prev)

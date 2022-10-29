@@ -58,17 +58,19 @@ fn model(_app: &App) -> Model
 
 	let z_near: f32 = 1.0;
 	let z_far: f32 = 10000.0;
-	let field_of_view: f32 = PI * 0.75;
-	let constants_vec: Vec3 = Vec3::new(10., 8./3., 23.);
-	let curveCount: u32 = 500;
+	let field_of_view: f32 = PI * 0.5;
+	let constants_vec: Vec3 = Vec3::new(10., 8. / 3., 28.);
+	let curve_count: u32 = 3500;
 
 	let mut rand_vec: Vec3 = Vec3::new(0., 0., 0.);
 
-	for _ in 0 .. curveCount
+	for _ in 0 .. curve_count
 	{
-		let x_range_pos: Range<f32> = -2.0 .. 2.0;
-		let y_range_pos: Range<f32> = -2.0 .. 2.0;
-		let z_range_pos: Range<f32> = -2.0 .. 2.0;
+		let box_range: f32 = 5.0;
+
+		let x_range_pos: Range<f32> = -box_range .. box_range;
+		let y_range_pos: Range<f32> = -box_range .. box_range;
+		let z_range_pos: Range<f32> = -box_range .. box_range;
 
 		rand_vec.randomize(x_range_pos, y_range_pos, z_range_pos);
 
@@ -90,6 +92,7 @@ fn model(_app: &App) -> Model
 				fov_radians: field_of_view,
 				window_size: model.window_size,
 				delta_time: model.time.delta_time,
+				curr_time: 0.,
 				lorentz_constants: constants_vec,
 				prev_point: rand_vec,
 				curr_point: rand_vec,
@@ -117,6 +120,11 @@ fn update(_app: &App, model: &mut Model, _update: Update)
 fn view(_app: &App, model: &Model, frame: Frame)
 {
 	let draw: Draw = _app.draw();
+
+	let bg_color: Srgb<f32> = Srgb::<f32>::new(0.02, 0.05, 0.1);
+
+	draw.background()
+		.color(bg_color);
 
 	model.display(&draw);
 
