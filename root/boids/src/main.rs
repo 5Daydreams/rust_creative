@@ -1,3 +1,5 @@
+use std::ops::Range;
+
 use nannou::prelude::*;
 
 mod helper;
@@ -36,9 +38,7 @@ impl Nannou for Model
 
 	fn update(&mut self)
 	{
-		let old_list = self
-			.boid_list
-			.clone();
+		let old_list: Vec<Boid> = self.boid_list.clone();
 
 		for boid in &mut self.boid_list
 		{
@@ -50,8 +50,8 @@ impl Nannou for Model
 
 fn model(_app: &App) -> Model
 {
-	let mut model = Model {
-		boid_count: 4500,
+	let mut model: Model = Model {
+		boid_count: 5500,
 		boid_list: Vec::new(),
 		window_size: [1200, 800],
 	};
@@ -66,14 +66,16 @@ fn model(_app: &App) -> Model
 	{
 		let mut rand_vec: Vec2 = Vec2::new(0., 0.);
 
-		let x_range_pos = -(model.window_size[0] as f32) .. (model.window_size[0] as f32);
-		let y_range_pos = -(model.window_size[1] as f32) .. (model.window_size[1] as f32);
+		let x_range_pos: Range<f32> =
+			-(model.window_size[0] as f32) .. (model.window_size[0] as f32);
+		let y_range_pos: Range<f32> =
+			-(model.window_size[1] as f32) .. (model.window_size[1] as f32);
 
 		rand_vec.randomize(x_range_pos, y_range_pos);
 		let position: Vec2 = rand_vec;
 
-		let x_range_vel = -100.0 .. 110.;
-		let y_range_vel = -100.0 .. 110.;
+		let x_range_vel: Range<f32> = -100.0 .. 110.;
+		let y_range_vel: Range<f32> = -100.0 .. 110.;
 
 		rand_vec.randomize(x_range_vel, y_range_vel);
 		let velocity: Vec2 = rand_vec;
@@ -89,7 +91,7 @@ fn model(_app: &App) -> Model
 		let g: f32 = rand::thread_rng().gen_range(0.02 .. 0.08);
 		let b: f32 = rand::thread_rng().gen_range(0.45 .. 0.85);
 
-		let color = Srgb::<f32>::new(r, g, b);
+		let color: Srgb<f32> = Srgb::<f32>::new(r, g, b);
 
 		let boid: Boid = Boid::new()
 			.position(position)
@@ -116,7 +118,7 @@ fn update(_app: &App, model: &mut Model, _update: Update) { model.update(); }
 
 fn view(_app: &App, model: &Model, frame: Frame)
 {
-	let draw = _app.draw();
+	let draw: Draw = _app.draw();
 
 	draw.background()
 		.color(Srgb::<f32>::new(0.05, 0.1, 0.15));

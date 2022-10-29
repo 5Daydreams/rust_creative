@@ -18,7 +18,10 @@ pub struct Boid
 
 pub trait Nannou
 {
-	fn update(&mut self);
+	fn update(&mut self)
+	{
+		println!("Fuck the police");
+	}
 	fn display(&self, draw: &nannou::Draw);
 }
 
@@ -51,10 +54,10 @@ impl Boid
 
 		for other in other_boids
 		{
-			let dist = Vec2::distance(self.position, other.position);
+			let dist: f32 = Vec2::distance(self.position, other.position);
 			if dist < self.perception_radius && other != self
 			{
-				let separation_calc = self.position - other.position;
+				let separation_calc: Vec2 = self.position - other.position;
 				separation_steering += separation_calc / (dist * dist);
 				cohesion_steering += other.position;
 				alignment_steering += other.velocity;
@@ -86,7 +89,7 @@ impl Boid
 
 	pub fn flock(&mut self, other_boids: &Vec<Boid>)
 	{
-		let steer_value = self.steer(other_boids);
+		let steer_value: Vec2 = self.steer(other_boids);
 		self.acceleration += steer_value;
 	}
 }
@@ -167,6 +170,7 @@ pub struct BoidBuilder
 	window_size: Option<[u32; 2]>,
 }
 
+#[allow(dead_code)]
 impl BoidBuilder
 {
 	pub fn position(&mut self, position: Vec2) -> &mut Self

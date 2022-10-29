@@ -4,13 +4,12 @@ use helper_structs::*;
 // use nannou::noise::{NoiseFn, Perlin};
 use nannou::prelude::*;
 
-fn main() {
-	nannou::app(model).run();
-}
+fn main() { nannou::app(model).run(); }
 
-fn model(_app: &App) -> Model {
+fn model(_app: &App) -> Model
+{
 	let color_value: Srgb<f32> = Srgb::<f32>::new(0.05, 0.1, 0.1);
-	let w_size = Vec2Int::new(800, 600);
+	let w_size: helper_structs::Vector2<u32> = Vec2Int::new(800, 600);
 
 	let model: Model = Model::new(color_value, w_size);
 
@@ -23,7 +22,8 @@ fn model(_app: &App) -> Model {
 	model
 }
 
-fn view(_app: &App, _model: &Model, frame: Frame) {
+fn view(_app: &App, _model: &Model, frame: Frame)
+{
 	let draw: Draw = _app.draw();
 
 	draw.background()
@@ -53,9 +53,8 @@ fn view(_app: &App, _model: &Model, frame: Frame) {
 
 	let y_value: f32 = HEIGHT * sample_result;
 
-	let normalized_sample_result =
-		helper_structs::skewed_cos(sample_value + MIDPOINT_OFFSET, SKEWNESS) * 0.5
-			+ 0.5;
+	let normalized_sample_result: f32 =
+		helper_structs::skewed_cos(sample_value + MIDPOINT_OFFSET, SKEWNESS) * 0.5 + 0.5;
 
 	let curr_vec: Vec2 = Vec2::new(
 		start_x_value,
@@ -64,23 +63,27 @@ fn view(_app: &App, _model: &Model, frame: Frame) {
 
 	points.push(curr_vec);
 
-	for i in 1..ELEMENT_COUNT {
+	for i in 1 .. ELEMENT_COUNT
+	{
 		let x_value: f32 = 2.0 * WIDTH * (i as f32 / ELEMENT_COUNT as f32) + start_x_value;
 
 		let sample_value: f32 = ((x_value + t) * SAMPLING_SCALE) / WIDTH;
 
-		let sample_result: f32 = match i % 2 {
+		let sample_result: f32 = match i % 2
+		{
 			| 0 => helper_structs::skewed_cos(sample_value, SKEWNESS), // do top line
 			| _ => helper_structs::skewed_cos(sample_value + SAMPLE_OFFSET, SKEWNESS), // do bottom line
 		};
 
 		let y_value: f32 = HEIGHT * sample_result;
 
-		let normalized_sample_result =
-			helper_structs::skewed_cos(sample_value + MIDPOINT_OFFSET, SKEWNESS)
-				* 0.5 + 0.5;
+		let normalized_sample_result: f32 =
+			helper_structs::skewed_cos(sample_value + MIDPOINT_OFFSET, SKEWNESS) * 0.5 + 0.5;
 
-		let curr_vec = Vec2::new(x_value, y_value * (BASE_LERP_VALUE + MIDPOINT_LERP_VALUE * normalized_sample_result));
+		let curr_vec: Vec2 = Vec2::new(
+			x_value,
+			y_value * (BASE_LERP_VALUE + MIDPOINT_LERP_VALUE * normalized_sample_result),
+		);
 
 		points.push(curr_vec);
 

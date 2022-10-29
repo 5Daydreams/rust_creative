@@ -60,11 +60,11 @@ fn model(_app: &App) -> Model
 	let z_far: f32 = 10000.0;
 	let field_of_view: f32 = PI * 0.75;
 	let constants_vec: Vec3 = Vec3::new(10., 8./3., 23.);
-	let curve_count: u32 = 50;
+	let curveCount: u32 = 500;
 
 	let mut rand_vec: Vec3 = Vec3::new(0., 0., 0.);
 
-	for _ in 0 .. curve_count
+	for _ in 0 .. curveCount
 	{
 		let x_range_pos: Range<f32> = -2.0 .. 2.0;
 		let y_range_pos: Range<f32> = -2.0 .. 2.0;
@@ -116,7 +116,7 @@ fn update(_app: &App, model: &mut Model, _update: Update)
 
 fn view(_app: &App, model: &Model, frame: Frame)
 {
-	let draw = _app.draw();
+	let draw: Draw = _app.draw();
 
 	model.display(&draw);
 

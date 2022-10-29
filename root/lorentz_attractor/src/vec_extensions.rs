@@ -13,8 +13,13 @@ pub trait Randomize
 
 pub trait Perspective2D
 {
-	fn project_into_2d(&self, window_size: [u32;2], fov: f32, near_plane: f32, far_plane: f32)
-		-> Vec2;
+	fn project_into_2d(
+		&self,
+		window_size: [u32; 2],
+		fov: f32,
+		near_plane: f32,
+		far_plane: f32,
+	) -> Vec2;
 }
 
 impl Randomize for Vec3
@@ -36,14 +41,14 @@ impl Perspective2D for Vec3
 {
 	fn project_into_2d(
 		&self,
-		window_size: [u32;2],
+		window_size: [u32; 2],
 		fov_radians: f32,
 		near_plane: f32,
 		far_plane: f32,
 	) -> Vec2
 	{
-		let w = window_size[1] as f32;
-		let h = window_size[0] as f32;
+		let w: f32 = window_size[1] as f32;
+		let h: f32 = window_size[0] as f32;
 
 		let window_aspect_ratio: f32 = w / h;
 

@@ -64,7 +64,7 @@ fn update(_app: &App, model: &mut Model, _update: Update) { model.update(); }
 
 fn view(app: &App, model: &Model, frame: Frame)
 {
-	let draw = app.draw();
+	let draw: Draw = app.draw();
 
     model.display(&draw);
 

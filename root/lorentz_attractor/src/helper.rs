@@ -43,7 +43,7 @@ impl Nannou for LorentzPoint
 		let point: Vec3 = self.curr_point;
 		let l_cst: Vec3 = self.lorentz_constants;
 
-		let movement_delta = Vec3::new(
+		let movement_delta: Vec3 = Vec3::new(
 			(l_cst.x * (point.y - point.x)) * dt,
 			(point.x * (l_cst.z - point.z) - point.y) * dt,
 			(point.x * point.y - l_cst.y * point.z) * dt,
@@ -61,20 +61,19 @@ impl Nannou for LorentzPoint
 		let mut temp: Vec2;
 		let offset: Vec3 = Vec3::new(x_offset, y_offset, z_offset);
 
-		temp = (self.prev_point + offset).project_into_2d(
-			self.window_size,
-			self.fov_radians,
-			self.near_plane,
-			self.far_plane,
-		);
+		let project_from_3d = |vec: Vec3| -> Vec2 {
+			(vec + offset).project_into_2d(
+				self.window_size,
+				self.fov_radians,
+				self.near_plane,
+				self.far_plane,
+			)
+		};
+
+		temp = project_from_3d(self.prev_point);
 		let draw_vec_prev: Vec2 = temp;
 
-		temp = (self.curr_point + offset).project_into_2d(
-			self.window_size,
-			self.fov_radians,
-			self.near_plane,
-			self.far_plane,
-		);
+		temp = project_from_3d(self.curr_point);
 		let draw_vec_curr: Vec2 = temp;
 
 		draw.line()

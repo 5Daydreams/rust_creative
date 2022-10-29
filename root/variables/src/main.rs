@@ -14,7 +14,7 @@ fn main()
     // shadowing -> you can CHANGE the variable type by using `let varName` again within the same scope or a different one!
     // I can only imagine how much more readable and flexible this structure will become later.
     {
-        let x = x * 2;
+        let x: i128 = x * 2;
         println!("The value of x in the inner scope is: {x}");
     }
 
