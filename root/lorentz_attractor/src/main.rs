@@ -57,9 +57,9 @@ fn model(_app: &App) -> Model
 	};
 
 	let z_near: f32 = 1.0;
-	let z_far: f32 = 10000.0;
-	let field_of_view: f32 = PI * 0.25;
-	let constants_vec: Vec3 = Vec3::new(5., 0.3, 12.);
+	let z_far: f32 = 1000.0;
+	let field_of_view: f32 = PI * 0.5;
+	let constants_vec: Vec3 = Vec3::new(7., 0.4, 50.);
 	let curve_count: u32 = 3500;
 
 	let mut rand_vec: Vec3 = Vec3::new(0., 0., 0.);
@@ -74,9 +74,9 @@ fn model(_app: &App) -> Model
 
 		rand_vec.randomize(x_range_pos, y_range_pos, z_range_pos);
 
-		let r_range: Range<f32> = 0.05 .. 0.1;
-		let g_range: Range<f32> = 0.2 .. 0.5;
-		let b_range: Range<f32> = 0.5 .. 0.8;
+		let r_range: Range<f32> = 0.3 .. 0.6;
+		let g_range: Range<f32> = 0.01 .. 0.05;
+		let b_range: Range<f32> = 0.5 .. 0.95;
 
 		let r: f32 = rand::thread_rng().gen_range(r_range);
 		let g: f32 = rand::thread_rng().gen_range(g_range);

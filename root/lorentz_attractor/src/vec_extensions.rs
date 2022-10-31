@@ -1,7 +1,4 @@
-use std::{
-	ops::Range,
-	sync::atomic::spin_loop_hint,
-};
+use std::ops::Range;
 
 use nannou::prelude::{
 	Vec2,
@@ -68,7 +65,7 @@ impl Perspective2D for Vec3
 				rot_radians.sin() * vec.x + rot_radians.cos() * vec.z,
 			)
 		};
-		
+
 		let proj_closure = |vec: Vec3| -> Vec3 {
 			Vec3::new(
 				(window_aspect_ratio * inverse_tangent_of_fov * vec.x) / vec.z,

@@ -44,7 +44,7 @@ impl Nannou for LorentzPoint
 	{
 		self.prev_point = self.curr_point;
 
-		let dt: f32 = self.delta_time;
+		let dt: f32 = self.delta_time/20.;
 		let point: Vec3 = self.curr_point;
 		let l_cst: Vec3 = self.lorentz_constants;
 
@@ -59,10 +59,7 @@ impl Nannou for LorentzPoint
 
 	fn display(&self, draw: &nannou::Draw)
 	{
-		let x_offset: f32 = 0.;
-		let y_offset: f32 = 0.;
-		let z_offset: f32 = 80.;
-		let offset: Vec3 = Vec3::new(x_offset, y_offset, z_offset);
+		let offset: Vec3 = Vec3::new(0., 0., 120.);
 
 		let project_from_3d = |vec: Vec3| -> Vec2 {
 			(vec).project_into_2d(
@@ -71,7 +68,7 @@ impl Nannou for LorentzPoint
 				self.fov_radians,
 				self.near_plane,
 				self.far_plane,
-				self.curr_time,
+				self.curr_time/5.,
 			)
 		};
 
