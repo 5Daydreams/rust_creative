@@ -29,7 +29,7 @@ fn view(_app: &App, _model: &Model, frame: Frame)
 	draw.background()
 		.color(_model.bg_color);
 
-	const SCROLL_SPEED: f32 = 150.0;
+	const SCROLL_SPEED: f32 = 50.0;
 	let t: f32 = _app.time * SCROLL_SPEED;
 
 	const WIDTH: f32 = 350.;
@@ -71,8 +71,8 @@ fn view(_app: &App, _model: &Model, frame: Frame)
 
 		let sample_result: f32 = match i % 2
 		{
-			| 0 => helper_structs::skewed_cos(sample_value, SKEWNESS), // do top line
-			| _ => helper_structs::skewed_cos(sample_value + SAMPLE_OFFSET, SKEWNESS), // do bottom line
+			0 => helper_structs::skewed_cos(sample_value, SKEWNESS), // do top line
+			_ => helper_structs::skewed_cos(sample_value + SAMPLE_OFFSET, SKEWNESS), // do bottom line
 		};
 
 		let y_value: f32 = HEIGHT * sample_result;
