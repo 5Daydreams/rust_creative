@@ -58,15 +58,15 @@ fn model(_app: &App) -> Model
 
 	let z_near: f32 = 1.0;
 	let z_far: f32 = 10000.0;
-	let field_of_view: f32 = PI * 0.5;
-	let constants_vec: Vec3 = Vec3::new(10., 8. / 3., 28.);
+	let field_of_view: f32 = PI * 0.25;
+	let constants_vec: Vec3 = Vec3::new(5., 0.3, 12.);
 	let curve_count: u32 = 3500;
 
 	let mut rand_vec: Vec3 = Vec3::new(0., 0., 0.);
 
 	for _ in 0 .. curve_count
 	{
-		let box_range: f32 = 5.0;
+		let box_range: f32 = 10.0;
 
 		let x_range_pos: Range<f32> = -box_range .. box_range;
 		let y_range_pos: Range<f32> = -box_range .. box_range;
