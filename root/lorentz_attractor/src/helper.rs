@@ -44,7 +44,7 @@ impl Nannou for LorentzPoint
 	{
 		self.prev_point = self.curr_point;
 
-		let dt: f32 = self.delta_time/20.;
+		let dt: f32 = self.delta_time;
 		let point: Vec3 = self.curr_point;
 		let l_cst: Vec3 = self.lorentz_constants;
 
@@ -68,7 +68,7 @@ impl Nannou for LorentzPoint
 				self.fov_radians,
 				self.near_plane,
 				self.far_plane,
-				self.curr_time/5.,
+				self.curr_time/2.,
 			)
 		};
 
