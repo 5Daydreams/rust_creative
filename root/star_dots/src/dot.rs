@@ -24,7 +24,7 @@ impl Nannou for Dot
 	fn display(&self, draw: &nannou::Draw)
 	{
 		let window_size = [DEFAULT_WINDOW_SIZE.0, DEFAULT_WINDOW_SIZE.1];
-		let offset = Vec3::new(OFFSET_X, OFFSET_Y, OFFSET_Z);
+		let offset = OFFSET_VEC;
 
 		let display_pos = self.pos.project_into_2d(
 			offset,
@@ -34,7 +34,7 @@ impl Nannou for Dot
 			CLIPPING_PLANES.1,
 		);
 
-		let converted_z = 1. - (self.pos.z / CLIPPING_PLANES.1);
+		let converted_z = 1. - ((self.pos.z- CLIPPING_PLANES.0)/ (CLIPPING_PLANES.1- CLIPPING_PLANES.0));
 		let final_radius = self.radius * converted_z;
 
 		draw.ellipse()

@@ -59,7 +59,7 @@ fn model(_app: &App) -> Model
 	let z_near: f32 = 1.0;
 	let z_far: f32 = 1000.0;
 	let field_of_view: f32 = PI * 0.3;
-	let constants_vec: Vec3 = Vec3::new(12., 1.5, 25.);
+	let constants_vec: Vec3 = Vec3::new(8., 2.5, 25.);
 	let curve_count: u32 = 1500;
 
 	let mut rand_vec: Vec3 = Vec3::new(0., 0., 0.);

@@ -48,7 +48,7 @@ impl Model
 		{
 			point.pos = point
 				.pos
-				.rotate_y(self.delta_time/2.);
+				.rotate_y(self.delta_time / 2.);
 		}
 	}
 }
@@ -63,16 +63,15 @@ impl Nannou for Model
 	fn display(&self, draw: &nannou::Draw)
 	{
 		let window_size = [DEFAULT_WINDOW_SIZE.0, DEFAULT_WINDOW_SIZE.1];
-		let offset = Vec3::new(OFFSET_X, OFFSET_Y, OFFSET_Z);
+		let offset = OFFSET_VEC;
 
-		let list_copy = self.point_list.clone();
 		let list_size = self.point_list.len();
 
 		for i in list_size / 3 .. list_size
 		{
-			let point_a = list_copy[(i) % list_size].pos;
-			let point_b = list_copy[(i + list_size / 2) % list_size].pos;
-			let point_c = list_copy[(i + list_size / 3) % list_size].pos;
+			let point_a = self.point_list[(i) % list_size].pos;
+			let point_b = self.point_list[(i + list_size / 2) % list_size].pos;
+			let point_c = self.point_list[(i + list_size / 3) % list_size].pos;
 
 			let display_pos_a = point_a.project_into_2d(
 				offset,
@@ -136,11 +135,9 @@ pub fn model(_app: &App) -> Model
 		.build()
 		.unwrap();
 
-	let mut random_pos: Vec3;
-
 	for _ in 0 .. POINT_COUNT
 	{
-		random_pos = model
+		let random_pos = model
 			.bounding_box
 			.get_random_vec3();
 
