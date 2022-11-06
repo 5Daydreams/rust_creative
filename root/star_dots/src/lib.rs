@@ -1,19 +1,21 @@
 use constants::*;
 use dot::Dot;
-use nannou::prelude::*;
+use edge::Edge;
+use nannou::{
+	geom::point,
+	prelude::*,
+};
 
 mod constants;
 mod dot;
+mod edge;
 mod range_cube;
 mod trait_nannou;
 mod vec_extensions;
 
 use range_cube::*;
 use trait_nannou::Nannou;
-use vec_extensions::{
-	Perspective2D,
-	RotateMatrixBaked,
-};
+use vec_extensions::RotateMatrixBaked;
 
 pub struct Model
 {
@@ -21,7 +23,7 @@ pub struct Model
 	pub prev_time: f32,
 	pub delta_time: f32,
 	pub point_list: Vec<Dot>,
-	pub edge_list: Vec<Vec2>,
+	pub edge_list: Vec<Edge>,
 	pub bounding_box: RangeCube,
 	pub window_size: (u32, u32),
 }
@@ -64,71 +66,14 @@ impl Nannou for Model
 {
 	fn display(&self, draw: &nannou::Draw)
 	{
-		let window_size = [DEFAULT_WINDOW_SIZE.0, DEFAULT_WINDOW_SIZE.1];
-		let offset = OFFSET_VEC;
-
-		let list_size = self.point_list.len();
-
-		for i in list_size / 3 .. list_size
-		{
-			let point_a = self.point_list[(i) % list_size].pos;
-			let point_b = self.point_list[(i + list_size / 2) % list_size].pos;
-			let point_c = self.point_list[(i + list_size / 3) % list_size].pos;
-
-			let display_pos_a = point_a.project_into_2d(
-				offset,
-				window_size,
-				FOV,
-				CLIPPING_PLANES.0,
-				CLIPPING_PLANES.1,
-			);
-
-			let display_pos_b = point_b.project_into_2d(
-				offset,
-				window_size,
-				FOV,
-				CLIPPING_PLANES.0,
-				CLIPPING_PLANES.1,
-			);
-
-			let display_pos_c = point_c.project_into_2d(
-				offset,
-				window_size,
-				FOV,
-				CLIPPING_PLANES.0,
-				CLIPPING_PLANES.1,
-			);
-
-			//  let funny_number = rand::Rng::gen_range(&mut rand::thread_rng(), 0.0 .. 1.0);
-
-			let funny_number = i as f32 / list_size as f32;
-
-			let default_line_color =
-				Srgb::<f32>::new(0.03, 0.06 + 0.08 * funny_number, 0.15 + 0.1 * funny_number);
-
-			todo!();
-			// 	"Implement the algorithm -> doubly-iterate through the list, making a copy as a queue
-			// 	The idea is to have the queue representing 'non-fully connected' nodes,
-			// and link those to their three closest neighbours -
-			// remove them from the queue if iterating over a filled-up node (3 neighbours)
-			// "
-
-			draw.line()
-				.caps_round()
-				.start(display_pos_a)
-				.end(display_pos_b)
-				.color(default_line_color);
-
-			draw.line()
-				.caps_round()
-				.start(display_pos_b)
-				.end(display_pos_c)
-				.color(default_line_color);
-		}
-
 		for point in &self.point_list
 		{
 			point.display(draw);
+		}
+
+		for edge in &self.edge_list
+		{
+			edge.display(draw);
 		}
 	}
 }
@@ -159,13 +104,45 @@ pub fn model(_app: &App) -> Model
 			.push(point);
 	}
 
-	// model
-	// 	.point_list
-	// 	.sort_by(|a, b| {
-	// 		a.pos
-	// 			.y
-	// 			.total_cmp(&b.pos.y)
-	// 	});
+	let list_copy = &model.point_list;
+
+	for point_a in &model.point_list
+	{
+		if point_a.neighbours >= 3
+		{
+			continue;
+		}
+
+		let mut closest_list: Vec<(&Dot, f32)> = Vec::new();
+
+		for point_b in list_copy
+		{
+			if &point_a == &point_b
+			{
+				continue;
+			}
+
+			let dist = point_a
+				.pos
+				.distance(point_b.pos);
+
+			let candidate = (point_b, dist);
+
+			for closest in closest_list
+			{
+				if closest.1 > candidate.1
+				{
+					closest_list.first()
+					closest_list.remove(index)
+					closest_list.push(candidate);
+				}
+			}
+
+		}
+
+		// this should NOT be necessary, but oh well
+		assert_eq!(point_a.neighbours, 3);
+	}
 
 	model
 }
