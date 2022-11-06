@@ -7,13 +7,13 @@ use crate::{
 };
 use typed_builder::TypedBuilder;
 
-#[derive(TypedBuilder, Default, Clone, PartialEq)]
+#[derive(TypedBuilder, Default, Copy, Clone, PartialEq)]
 pub struct Dot
 {
 	pub pos: Vec3,
 
 	#[builder(default = 0)]
-	pub neighbours: u32,
+	pub neighbours: usize,
 
 	#[builder(default = 2.5)]
 	pub radius: f32,
