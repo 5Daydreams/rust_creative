@@ -106,6 +106,13 @@ impl Nannou for Model
 			let default_line_color =
 				Srgb::<f32>::new(0.03, 0.06 + 0.08 * funny_number, 0.15 + 0.1 * funny_number);
 
+			todo!();
+			// 	"Implement the algorithm -> doubly-iterate through the list, making a copy as a queue
+			// 	The idea is to have the queue representing 'non-fully connected' nodes,
+			// and link those to their three closest neighbours -
+			// remove them from the queue if iterating over a filled-up node (3 neighbours)
+			// "
+
 			draw.line()
 				.caps_round()
 				.start(display_pos_a)
