@@ -49,7 +49,7 @@ impl Perspective2D for Vec3
 	{
 		let w: f32 = window_size[0] as f32;
 		let h: f32 = window_size[1] as f32;
-		let window_aspect_ratio: f32 = h / w;
+		let window_aspect_ratio: f32 = w / h;
 
 		let inverse_tangent_of_fov: f32 = 1. / (fov_radians * 0.5).tan();
 		let q_value: f32 = far_plane / (far_plane - near_plane);

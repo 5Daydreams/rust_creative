@@ -21,6 +21,7 @@ pub struct Model
 	pub prev_time: f32,
 	pub delta_time: f32,
 	pub point_list: Vec<Dot>,
+	pub edge_list: Vec<Vec2>,
 	pub bounding_box: RangeCube,
 	pub window_size: (u32, u32),
 }
@@ -37,6 +38,7 @@ impl Model
 			prev_time: 0.,
 			delta_time: 0.16,
 			point_list: Vec::new(),
+			edge_list: Vec::new(),
 			bounding_box: box_ranges,
 			window_size: DEFAULT_WINDOW_SIZE,
 		}
