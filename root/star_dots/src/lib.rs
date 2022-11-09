@@ -9,6 +9,7 @@ mod edge;
 mod range_cube;
 mod trait_nannou;
 mod vec_extensions;
+use rand::{self, Rng};
 
 use range_cube::*;
 use trait_nannou::Nannou;
@@ -44,6 +45,11 @@ impl Model {
         for point in &mut self.point_list {
             point.pos = point.pos.rotate_y(self.delta_time / 2.);
         }
+
+        for edge in &mut self.edge_list {
+            edge.start.pos = edge.start.pos.rotate_y(self.delta_time / 2.);
+            edge.end.pos = edge.end.pos.rotate_y(self.delta_time / 2.);
+        }
     }
 }
 
@@ -78,7 +84,13 @@ pub fn model(_app: &App) -> Model {
     for _ in 0..POINT_COUNT {
         let random_pos = model.bounding_box.get_random_vec3();
 
-        let point = Dot::builder().pos(random_pos).build();
+        let r: f32 = rand::thread_rng().gen_range(0.02..0.05);
+        let g: f32 = rand::thread_rng().gen_range(0.1..0.35);
+        let b: f32 = rand::thread_rng().gen_range(0.70..0.99);
+
+        let color: Srgb<f32> = Srgb::<f32>::new(r, g, b);
+
+        let point = Dot::builder().pos(random_pos).color(color).build();
 
         model.point_list.push(point);
     }
@@ -121,7 +133,7 @@ pub fn model(_app: &App) -> Model {
 
     for i in 0..model.point_list.len() {
         let current = &model.point_list[i];
-        let neighbor_count = 3 - current.neighbours;
+        let neighbor_count = NEIGHBOUR_COUNT_MAX - current.neighbours;
         if neighbor_count == 0 {
             continue;
         }
@@ -129,7 +141,7 @@ pub fn model(_app: &App) -> Model {
             .point_list
             .iter()
             .enumerate()
-            .filter(|&(index_other, other)| other.neighbours < neighbor_count && index_other != i)
+            .filter(|&(index_other, other)| other.neighbours < NEIGHBOUR_COUNT_MAX && index_other != i)
             .map(|(index_other, other)| (current.pos.distance(other.pos), index_other))
             .collect::<Vec<_>>();
 
@@ -137,11 +149,25 @@ pub fn model(_app: &App) -> Model {
         dists.truncate(neighbor_count);
 
         for (_, other_index) in dists {
+            let dist = (model.point_list[other_index].pos).distance(model.point_list[i].pos);
+
+            let funny_number = EDGE_STRENGTH / (dist);
+
+            let r: f32 = rand::thread_rng().gen_range(0.12..0.18);
+            let g: f32 = rand::thread_rng().gen_range(0.02..0.08);
+            let b: f32 = rand::thread_rng().gen_range(0.55..0.85);
+
+            let edge_line_color =
+                Srgb::<f32>::new(r * funny_number, g * funny_number, b * funny_number);
+
             let thing = Edge {
                 start: model.point_list[other_index],
                 end: model.point_list[i],
-                color: Srgb::<f32>::new(0.05, 0.3, 0.4),
+                color: edge_line_color,
             };
+
+            model.point_list[other_index].neighbours += 1;
+            model.point_list[i].neighbours  += 1;
             model.edge_list.push(thing);
         }
     }
