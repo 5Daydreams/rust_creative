@@ -3,8 +3,6 @@ use nannou::prelude::*;
 use crate::{constants::*, trait_nannou::Nannou, vec_extensions::Perspective2D};
 use typed_builder::TypedBuilder;
 
-const EDGE_STRENGTH: f32 = 5.;
-
 #[derive(TypedBuilder, Default, Clone)]
 pub struct Edge {
     pub start: crate::dot::Dot,
@@ -35,17 +33,10 @@ impl Nannou for Edge {
             CLIPPING_PLANES.1,
         );
 
-        let dist = (self.end.pos).distance(self.start.pos);
-
-        let funny_number = EDGE_STRENGTH / dist;
-
-        let default_line_color =
-            Srgb::<f32>::new(0.03, 0.06 + 0.08 * funny_number, 0.15 + 0.1 * funny_number);
-
         draw.line()
             .caps_round()
             .start(display_pos_a)
             .end(display_pos_b)
-            .color(default_line_color);
+            .color(self.color);
     }
 }
