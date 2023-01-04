@@ -76,7 +76,7 @@ pub fn model(_app: &App) -> Model {
 
     _app.new_window()
         .size(model.window_size.0, model.window_size.1)
-        .title("Gradient Dots :v")
+        .title("Star Dots :v")
         .view(view)
         .build()
         .unwrap();
@@ -151,7 +151,7 @@ pub fn model(_app: &App) -> Model {
         for (_, other_index) in dists {
             let dist = (model.point_list[other_index].pos).distance(model.point_list[i].pos);
 
-            let funny_number = EDGE_STRENGTH / (dist);
+            let funny_number = EDGE_STRENGTH / (dist.sqrt());
 
             let r: f32 = rand::thread_rng().gen_range(0.12..0.18);
             let g: f32 = rand::thread_rng().gen_range(0.02..0.08);
