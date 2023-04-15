@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        ".\\root\\texture_galaxy\\Cargo.toml"
+    ]
+}

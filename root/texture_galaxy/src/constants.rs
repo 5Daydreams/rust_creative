@@ -1,0 +1,1 @@
+pub const DEFAULT_WINDOW_SIZE: (u32, u32) = (512, 512);
