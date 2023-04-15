@@ -1,11 +1,11 @@
-use constants::*;
 use nannou::prelude::*;
 
 mod constants;
+// use image::{Rgb, RgbImage};
+#[allow(unused_imports)]
 use rand::{self, Rng};
 
 pub struct Model {
-    pub texture: wgpu::Texture,
     pub curr_time: f32,
     pub prev_time: f32,
     pub delta_time: f32,
@@ -16,12 +16,7 @@ impl Model {
     pub fn new() -> Self {
         use constants::*;
 
-        let assets = app.assets_path().unwrap();
-        let img_path = assets.join("textures").join("nannou.png");
-        let texture = wgpu::Texture::from_path(app, img_path).unwrap();
-
         Self {
-            texture,
             curr_time: 0.,
             prev_time: 0.,
             delta_time: 0.16,
@@ -47,15 +42,13 @@ impl Model {
             .radius(r2);
 
         draw.ellipse()
-            .x(eye_pos.x + eye_offset - r1/2.0)
-            .y(eye_pos.y + r1/2.0)
+            .x(eye_pos.x + eye_offset - r1 / 2.0)
+            .y(eye_pos.y + r1 / 2.0)
             .color(WHITE)
-            .radius(r1/5.0);
+            .radius(r1 / 5.0);
     }
 
     pub fn display(&self, draw: &nannou::Draw) {
-
-        draw.texture(&self.texture);
         // TODO: add behavior to display things on update
 
         let x = 10.0 * self.curr_time.sin();
@@ -71,6 +64,7 @@ impl Model {
 }
 
 pub fn model(_app: &App) -> Model {
+    #[allow(unused_mut)]
     let mut model: Model = Model::new();
 
     _app.new_window()
@@ -98,6 +92,26 @@ pub fn view(app: &App, model: &Model, frame: Frame) {
 
     draw.background().color(bg_color);
 
+    let assets = app.assets_path().unwrap();
+    let img_path = assets.join("textures").join("nannou.png");
+    let texture = wgpu::Texture::from_path(app, img_path).unwrap();
+
+    draw.texture(&texture);
+    
+    use nannou::image::{RgbImage, Rgb};
+    
+    let mut img = RgbImage::new(32, 32);
+    
+    for x in 15..=17 {
+        for y in 8..24 {
+            img.put_pixel(x, y, Rgb([255, 0, 0]));
+            img.put_pixel(y, x, Rgb([255, 0, 0]));
+        }
+    }
+    
+    let texture = wgpu::Texture::from_image(app, img);
+    draw.texture(&texture);
+    
     model.display(&draw);
 
     draw.to_frame(app, &frame).unwrap();

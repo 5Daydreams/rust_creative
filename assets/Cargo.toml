@@ -1,0 +1,5 @@
+[package]
+name = "asssets"
+version = "0.1.0"
+authors = ["Nelson Kossuga <nelsonkossuga@gmail.com>"]
+edition = "2021"
